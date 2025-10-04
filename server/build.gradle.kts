@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.flywaydb:flyway-database-postgresql:10.15.2")
+        classpath("org.flywaydb:flyway-database-postgresql:10.22.0")
     }
 }
 
@@ -12,7 +12,7 @@ plugins {
     alias(libs.plugins.ktor)
     alias(libs.plugins.kotlin.plugin.serialization)
     alias(libs.plugins.ktlint)
-    id("org.flywaydb.flyway") version "10.15.2"
+    id("org.flywaydb.flyway") version "10.22.0"
 }
 
 application {
@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.exposed.migration.jdbc)
     implementation(libs.hikari)
     implementation(libs.flyway.core)
+    implementation(libs.flyway.database.postgresql)
     implementation(libs.ktor.server.html.builder)
     implementation(libs.kotlinx.html)
     implementation(libs.ktor.server.htmx)
