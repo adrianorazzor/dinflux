@@ -6,6 +6,6 @@ plugins {
 }
 
 subprojects {
-    group = "com"
+    group = "com.dinflux"
     version = "0.0.1"
 }

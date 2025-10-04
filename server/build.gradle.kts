@@ -2,10 +2,12 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor)
     alias(libs.plugins.kotlin.plugin.serialization)
+    alias(libs.plugins.ktlint)
 }
 
 application {
     mainClass = "io.ktor.server.netty.EngineMain"
+    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=true")
 }
 
 tasks.withType<ProcessResources> {
@@ -19,6 +21,16 @@ tasks.withType<ProcessResources> {
         include("**/*")
     }
     duplicatesStrategy = DuplicatesStrategy.WARN
+}
+
+ktor {
+    development = true
+}
+
+// Ktlint: provides `ktlintCheck` and `ktlintFormat` tasks.
+// Minimal configuration; defaults align with standard Kotlin style.
+ktlint {
+    android.set(false)
 }
 
 dependencies {

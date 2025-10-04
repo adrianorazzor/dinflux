@@ -6,8 +6,9 @@ kotlin = "2.2.20"
 kotlinx-browser = "0.3"
 kotlinx-html = "0.12.0"
 ktor = "3.3.0"
-logback = "1.4.14"
+logback = "1.5.13"
 postgres = "42.7.7"
+ktlintPlugin = "12.1.1"
 
 [libraries]
 koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koin" }
@@ -42,3 +43,4 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintPlugin" }
