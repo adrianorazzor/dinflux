@@ -1,8 +1,18 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.flywaydb:flyway-database-postgresql:10.15.2")
+    }
+}
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor)
     alias(libs.plugins.kotlin.plugin.serialization)
     alias(libs.plugins.ktlint)
+    id("org.flywaydb.flyway") version "10.15.2"
 }
 
 application {
@@ -27,6 +37,14 @@ ktor {
     development = true
 }
 
+
+val flywayMigration by configurations.creating {
+    isCanBeResolved = true
+    isCanBeConsumed = false
+}
+
+
+
 // Ktlint: provides `ktlintCheck` and `ktlintFormat` tasks.
 // Minimal configuration; defaults align with standard Kotlin style.
 ktlint {
@@ -42,7 +60,14 @@ dependencies {
     implementation(libs.postgresql)
     implementation(libs.h2)
     implementation(libs.exposed.core)
+    implementation(libs.exposed.dao)
     implementation(libs.exposed.jdbc)
+    implementation(libs.exposed.java.time)
+    implementation(libs.exposed.kotlin.datetime)
+    implementation(libs.exposed.migration.core)
+    implementation(libs.exposed.migration.jdbc)
+    implementation(libs.hikari)
+    implementation(libs.flyway.core)
     implementation(libs.ktor.server.html.builder)
     implementation(libs.kotlinx.html)
     implementation(libs.ktor.server.htmx)
@@ -57,6 +82,20 @@ dependencies {
     implementation(libs.ktor.server.netty)
     implementation(libs.logback.classic)
     implementation(libs.ktor.server.config.yaml)
+    flywayMigration(libs.postgresql)
+    flywayMigration(libs.flyway.database.postgresql)
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
+}
+
+flyway {
+    url = "jdbc:postgresql://localhost:5432/dinflux"
+    user = "dinflux"
+    password = "dinflux"
+    driver = "org.postgresql.Driver"
+    locations = arrayOf("classpath:db/migration")
+}
+tasks.withType<org.flywaydb.gradle.task.AbstractFlywayTask>().configureEach {
+    configurations = arrayOf("flywayMigration")
+    dependsOn(tasks.named("processResources"))
 }

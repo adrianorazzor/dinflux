@@ -1,5 +1,6 @@
 package com
 
+import com.config.DatabaseFactory
 import io.ktor.server.application.Application
 
 fun main(args: Array<String>) {
@@ -8,5 +9,6 @@ fun main(args: Array<String>) {
 
 @Suppress("unused")
 fun Application.module() {
+    DatabaseFactory.init(environment.config)
     configureRouting()
 }

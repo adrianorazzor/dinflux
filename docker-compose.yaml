@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: dinflux-db
+    environment:
+      POSTGRES_USER: dinflux
+      POSTGRES_PASSWORD: dinflux
+      POSTGRES_DB: dinflux
+    ports:
+      - "5432:5432"
+    volumes:
+      - dinflux-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dinflux -d dinflux"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  dinflux-pgdata:
