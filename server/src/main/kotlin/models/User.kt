@@ -24,6 +24,6 @@ class User(id: EntityID<UUID>) : UUIDEntity(id) {
     var email by Users.email
     var password by Users.passwordHash
     var createdAt by Users.createdAt
-    var isActive  by Users.isActive
+    var isActive by Users.isActive
     var displayName by Users.displayName
 }

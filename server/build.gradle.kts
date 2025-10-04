@@ -37,13 +37,10 @@ ktor {
     development = true
 }
 
-
 val flywayMigration by configurations.creating {
     isCanBeResolved = true
     isCanBeConsumed = false
 }
-
-
 
 // Ktlint: provides `ktlintCheck` and `ktlintFormat` tasks.
 // Minimal configuration; defaults align with standard Kotlin style.
