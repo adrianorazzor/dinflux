@@ -9,6 +9,7 @@ import io.ktor.server.auth.authenticate
 import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.resources.Resources
 import io.ktor.server.response.respondText
+import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 
 fun Application.configureRouting(authService: AuthService) {
@@ -22,7 +23,9 @@ fun Application.configureRouting(authService: AuthService) {
 
     routing {
         authenticate("session") {
-            // secure routes go here
+            get("/") {
+                call.respondText("Dashboard em construção")
+            }
         }
     }
 }

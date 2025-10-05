@@ -42,7 +42,7 @@ fun Application.module() {
                 authService.getSession(session.userId)
             }
             challenge {
-                call.respondRedirect("/login")
+                call.respondRedirect("/auth/login")
             }
         }
     }

@@ -114,7 +114,7 @@ O app deve permitir registrar **ingressos**, **despesas fixas e variáveis** e *
 ## 5. Checklist de Desenvolvimento
 
 - [x] Implementar autenticação backend (rotas de registro/login, hashing de senha, armazenamento de sessão e middleware).
-- [ ] Construir página de login com HTMX/Tailwind e layout base integrado às rotas de autenticação.
+- [x] Construir página de login com HTMX/Tailwind e layout base integrado às rotas de autenticação.
 - [ ] Proteger rotas existentes com verificação de sessão e adicionar fluxo de logout.
 - [ ] Adicionar CRUD de contas (rotas, serviços, formulários, validações e testes conforme Sprint 1).
 - [ ] Adicionar CRUD de categorias (mesma abordagem, garantindo escopo por usuário e testes).
