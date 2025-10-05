@@ -11,8 +11,11 @@ import io.ktor.server.resources.Resources
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
+import org.koin.ktor.ext.inject
 
-fun Application.configureRouting(authService: AuthService) {
+fun Application.configureRouting() {
+    val authService by inject<AuthService>()
+
     install(Resources)
     install(StatusPages) {
         exception<Throwable> { call, cause ->

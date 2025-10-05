@@ -4,6 +4,7 @@ import com.features.auth.UserSession
 import io.ktor.server.sessions.SessionTransportTransformerMessageAuthentication
 import io.ktor.server.sessions.SessionsConfig
 import io.ktor.server.sessions.cookie
+import kotlin.text.Charsets
 
 fun SessionsConfig.sessions(
     cookieName: String,
