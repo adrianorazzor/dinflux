@@ -2,7 +2,7 @@
 
 ## Users
 - Multi-tenant boundary; every resource belongs to exactly one user.
-- Stores auth credentials plus preferences (currency, locale).
+- Stores features.auth credentials plus preferences (currency, locale).
 
 ## Accounts
 - Types: `BANK` (cash/transfer) and `CREDIT_CARD` (extra fields `limit`, `closingDay`, `dueDay`).

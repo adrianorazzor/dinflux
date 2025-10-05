@@ -1,8 +1,8 @@
 package com.features.auth
 
 import io.ktor.http.ContentType
-import io.ktor.server.application.ApplicationCall
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.ApplicationCall
 import io.ktor.server.html.respondHtml
 import io.ktor.server.response.respondText
 import kotlinx.html.FlowContent
@@ -10,13 +10,17 @@ import kotlinx.html.FormEncType
 import kotlinx.html.FormMethod
 import kotlinx.html.HTML
 import kotlinx.html.InputType
+import kotlinx.html.body
 import kotlinx.html.button
+import kotlinx.html.classes
 import kotlinx.html.div
 import kotlinx.html.form
 import kotlinx.html.h1
 import kotlinx.html.head
+import kotlinx.html.id
 import kotlinx.html.input
 import kotlinx.html.label
+import kotlinx.html.lang
 import kotlinx.html.meta
 import kotlinx.html.p
 import kotlinx.html.script
@@ -24,7 +28,10 @@ import kotlinx.html.span
 import kotlinx.html.stream.createHTML
 import kotlinx.html.title
 
-suspend fun ApplicationCall.respondLoginPage(error: String?, email: String) {
+suspend fun ApplicationCall.respondLoginPage(
+    error: String?,
+    email: String,
+) {
     respondHtml {
         loginPage(error, email)
     }
@@ -39,7 +46,10 @@ suspend fun ApplicationCall.respondLoginCard(
     respondText(snippet, ContentType.Text.Html, status)
 }
 
-private fun HTML.loginPage(error: String?, email: String) {
+private fun HTML.loginPage(
+    error: String?,
+    email: String,
+) {
     lang = "pt-BR"
     head {
         meta { charset = "utf-8" }
@@ -58,7 +68,10 @@ private fun HTML.loginPage(error: String?, email: String) {
     }
 }
 
-private fun FlowContent.loginCard(error: String?, email: String) {
+private fun FlowContent.loginCard(
+    error: String?,
+    email: String,
+) {
     div(classes = "w-full max-w-md rounded-2xl bg-slate-900/80 backdrop-blur shadow-xl ring-1 ring-slate-800 p-8") {
         id = "login-card"
         h1(classes = "text-2xl font-semibold text-slate-50 mb-6 text-center") {
@@ -78,14 +91,19 @@ private fun FlowContent.loginCard(error: String?, email: String) {
             attributes["hx-post"] = "/auth/login"
             attributes["hx-target"] = "#login-card"
             attributes["hx-swap"] = "outerHTML"
-            classes = "space-y-5"
+            classes = setOf("space-y-5")
 
             div {
                 label(classes = "block text-sm font-medium text-slate-300 mb-1") {
                     htmlFor = "email"
                     +"E-mail"
                 }
-                input(type = InputType.email, classes = "w-full rounded-lg border border-slate-800 bg-slate-950/60 px-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/60") {
+                input(
+                    type = InputType.email,
+                    classes =
+                        "w-full rounded-lg border border-slate-800 bg-slate-950/60 px-4 py-2.5 text-sm text-slate-100 " +
+                            "placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/60",
+                ) {
                     id = "email"
                     name = "email"
                     value = email
@@ -99,7 +117,12 @@ private fun FlowContent.loginCard(error: String?, email: String) {
                     htmlFor = "password"
                     +"Senha"
                 }
-                input(type = InputType.password, classes = "w-full rounded-lg border border-slate-800 bg-slate-950/60 px-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/60") {
+                input(
+                    type = InputType.password,
+                    classes =
+                        "w-full rounded-lg border border-slate-800 bg-slate-950/60 px-4 py-2.5 text-sm text-slate-100 " +
+                            "placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/60",
+                ) {
                     id = "password"
                     name = "password"
                     required = true
@@ -107,7 +130,12 @@ private fun FlowContent.loginCard(error: String?, email: String) {
                 }
             }
 
-            button(type = kotlinx.html.ButtonType.submit, classes = "w-full rounded-lg bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/60") {
+            button(
+                type = kotlinx.html.ButtonType.submit,
+                classes =
+                    "w-full rounded-lg bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-emerald-950 transition " +
+                        "hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/60",
+            ) {
                 +"Entrar"
             }
         }

@@ -3,7 +3,6 @@ package com.features.auth
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationCall
-import io.ktor.server.application.call
 import io.ktor.server.request.receiveParameters
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
@@ -81,15 +80,19 @@ fun Application.authRoutes(authService: AuthService) {
     }
 }
 
-private fun Throwable.toLoginErrorMessage(): String = when (message) {
-    "invalid_credentials" -> "E-mail ou senha inválidos."
-    "inactive_user" -> "Esta conta está desativada."
-    else -> "Não foi possível entrar. Tente novamente."
-}
+private fun Throwable.toLoginErrorMessage(): String =
+    when (message) {
+        "invalid_credentials" -> "E-mail ou senha inválidos."
+        "inactive_user" -> "Esta conta está desativada."
+        else -> "Não foi possível entrar. Tente novamente."
+    }
 
 private fun ApplicationCall.isHtmxRequest(): Boolean = request.headers["HX-Request"] == "true"
 
-private suspend fun ApplicationCall.respondWithRedirect(target: String, isHtmx: Boolean) {
+private suspend fun ApplicationCall.respondWithRedirect(
+    target: String,
+    isHtmx: Boolean,
+) {
     if (isHtmx) {
         response.headers.append("HX-Redirect", target)
         respond(HttpStatusCode.NoContent)

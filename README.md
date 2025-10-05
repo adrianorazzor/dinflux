@@ -28,7 +28,7 @@ Here's a list of features included in this project:
 | [Sessions](https://start.ktor.io/p/ktor-sessions)                      | Adds support for persistent sessions through cookies or headers                    |
 | [Resources](https://start.ktor.io/p/resources)                         | Provides type-safe routing                                                         |
 | [Status Pages](https://start.ktor.io/p/status-pages)                   | Provides exception handling for routes                                             |
-| [Authentication](https://start.ktor.io/p/auth)                         | Provides extension point for handling the Authorization header                     |
+| [Authentication](https://start.ktor.io/p/features.auth)                         | Provides extension point for handling the Authorization header                     |
 
 ## Structure
 

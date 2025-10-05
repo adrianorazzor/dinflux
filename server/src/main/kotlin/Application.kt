@@ -1,6 +1,7 @@
 package com
 
 import com.config.DatabaseFactory
+import com.config.sessions
 import com.features.auth.AuthService
 import com.features.auth.PasswordHasher
 import com.features.auth.UserRepository
@@ -10,10 +11,7 @@ import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.session
 import io.ktor.server.response.respondRedirect
-import io.ktor.server.sessions.SessionTransportTransformerMessageAuthentication
 import io.ktor.server.sessions.Sessions
-import io.ktor.server.sessions.cookie
-import kotlin.text.Charsets
 
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
@@ -30,10 +28,7 @@ fun Application.module() {
     val cookieName = environment.config.property("auth.cookie.name").getString()
 
     install(Sessions) {
-        cookie<UserSession>(cookieName) {
-            val secretBytes = authSecret.toByteArray(Charsets.UTF_8)
-            transform(SessionTransportTransformerMessageAuthentication(secretBytes))
-        }
+        sessions(cookieName = cookieName, authSecret = authSecret)
     }
 
     install(Authentication) {
