@@ -2,11 +2,18 @@ package com.features.auth
 
 import io.ktor.resources.Resource
 
-@Resource("/auth/login")
-data class AuthLogin(val error: String? = null, val email: String? = null)
+@Resource("/auth")
+class AuthResources {
+    @Resource("/login")
+    data class Login(
+        val parent: AuthResources = AuthResources(),
+        val error: String? = null,
+        val email: String? = null,
+    )
 
-@Resource("/auth/register")
-class AuthRegister
+    @Resource("/register")
+    data class Register(val parent: AuthResources = AuthResources())
 
-@Resource("/auth/logout")
-class AuthLogout
+    @Resource("/logout")
+    data class Logout(val parent: AuthResources = AuthResources())
+}

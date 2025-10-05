@@ -41,7 +41,7 @@ suspend fun ApplicationCall.respondLoginPage(
 suspend fun ApplicationCall.respondLoginCard(
     error: String?,
     email: String,
-    status: HttpStatusCode,
+    status: HttpStatusCode = HttpStatusCode.OK,
 ) {
     val snippet = createHTML().div { loginCard(error, email) }
     respondText(snippet, ContentType.Text.Html, status)

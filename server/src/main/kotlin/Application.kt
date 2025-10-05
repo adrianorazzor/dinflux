@@ -7,6 +7,7 @@ import com.di.appModule
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
+import io.ktor.server.resources.Resources
 import io.ktor.server.sessions.Sessions
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
@@ -30,6 +31,8 @@ fun Application.module() {
     install(Sessions) {
         sessions(cookieName = cookieName, authSecret = authSecret)
     }
+
+    install(Resources)
 
     install(Authentication) {
         sessionAuth(application = this@module)
