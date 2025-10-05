@@ -1,11 +1,13 @@
 package com.features.auth
 
+import com.features.shared.isHtmxRequest
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationCall
-import io.ktor.server.application.application
-import io.ktor.server.application.call
 import io.ktor.server.request.receiveParameters
+import io.ktor.server.resources.get
+import io.ktor.server.resources.href
+import io.ktor.server.resources.post
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
 import io.ktor.server.response.respondText
@@ -14,13 +16,10 @@ import io.ktor.server.sessions.clear
 import io.ktor.server.sessions.get
 import io.ktor.server.sessions.sessions
 import io.ktor.server.sessions.set
-import io.ktor.server.resources.get
-import io.ktor.server.resources.href
-import io.ktor.server.resources.post
 
 fun Application.authRoutes(authService: AuthService) {
     routing {
-        get<AuthLogin> { resource ->
+        get<AuthResources.Login> { resource ->
             if (call.sessions.get<UserSession>() != null) {
                 call.respondRedirect("/")
                 return@get
@@ -31,7 +30,7 @@ fun Application.authRoutes(authService: AuthService) {
             call.respondLoginPage(error, email)
         }
 
-        post<AuthRegister> {
+        post<AuthResources.Register> {
             val params = call.receiveParameters()
             val email = params["email"].orEmpty()
             val displayName = params["displayName"].orEmpty()
@@ -47,7 +46,7 @@ fun Application.authRoutes(authService: AuthService) {
                 }
         }
 
-        post<AuthLogin> {
+        post<AuthResources.Login> {
             val params = call.receiveParameters()
             val email = params["email"].orEmpty().trim()
             val password = params["password"].orEmpty()
@@ -61,18 +60,18 @@ fun Application.authRoutes(authService: AuthService) {
                 .onFailure { throwable ->
                     val message = throwable.toLoginErrorMessage()
                     if (isHtmx) {
-                        call.respondLoginCard(message, email, HttpStatusCode.Unauthorized)
+                        call.respondLoginCard(message, email)
                     } else {
-                        val loginUrl = call.application.href(AuthLogin(error = message, email = email))
+                        val loginUrl = call.application.href(AuthResources.Login(error = message, email = email))
                         call.respondRedirect(loginUrl)
                     }
                 }
         }
 
-        post<AuthLogout> {
+        post<AuthResources.Logout> {
             val isHtmx = call.isHtmxRequest()
             call.sessions.clear<UserSession>()
-            val loginUrl = call.application.href(AuthLogin())
+            val loginUrl = call.application.href(AuthResources.Login())
             call.respondWithRedirect(loginUrl, isHtmx)
         }
     }
@@ -84,8 +83,6 @@ private fun Throwable.toLoginErrorMessage(): String =
         "inactive_user" -> "Esta conta está desativada."
         else -> "Não foi possível entrar. Tente novamente."
     }
-
-private fun ApplicationCall.isHtmxRequest(): Boolean = request.headers["HX-Request"] == "true"
 
 private suspend fun ApplicationCall.respondWithRedirect(
     target: String,
