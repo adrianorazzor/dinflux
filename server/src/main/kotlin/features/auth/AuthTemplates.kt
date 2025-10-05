@@ -1,5 +1,6 @@
 package com.features.auth
 
+import com.features.shared.classNames
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
@@ -61,7 +62,18 @@ private fun HTML.loginPage(
         script(src = "https://cdn.tailwindcss.com") {}
         script(src = "https://unpkg.com/htmx.org@1.9.12") {}
     }
-    body(classes = "min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-6") {
+    body(
+        classes =
+            classNames(
+                "min-h-screen",
+                "bg-slate-950",
+                "text-slate-100",
+                "flex",
+                "items-center",
+                "justify-center",
+                "p-6",
+            ),
+    ) {
         div {
             loginCard(error, email)
         }
@@ -72,14 +84,48 @@ private fun FlowContent.loginCard(
     error: String?,
     email: String,
 ) {
-    div(classes = "w-full max-w-md rounded-2xl bg-slate-900/80 backdrop-blur shadow-xl ring-1 ring-slate-800 p-8") {
+    div(
+        classes =
+            classNames(
+                "w-full",
+                "max-w-md",
+                "rounded-2xl",
+                "bg-slate-900/80",
+                "backdrop-blur",
+                "shadow-xl",
+                "ring-1",
+                "ring-slate-800",
+                "p-8",
+            ),
+    ) {
         id = "login-card"
-        h1(classes = "text-2xl font-semibold text-slate-50 mb-6 text-center") {
+        h1(
+            classes =
+                classNames(
+                    "text-2xl",
+                    "font-semibold",
+                    "text-slate-50",
+                    "mb-6",
+                    "text-center",
+                ),
+        ) {
             +"Entre na sua conta"
         }
 
         if (!error.isNullOrBlank()) {
-            div(classes = "mb-4 rounded-lg border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-200") {
+            div(
+                classes =
+                    classNames(
+                        "mb-4",
+                        "rounded-lg",
+                        "border",
+                        "border-red-500/40",
+                        "bg-red-500/10",
+                        "p-4",
+                        "text-sm",
+                        "text-red-200",
+                    ),
+            ) {
                 span { +error }
             }
         }
@@ -94,15 +140,38 @@ private fun FlowContent.loginCard(
             classes = setOf("space-y-5")
 
             div {
-                label(classes = "block text-sm font-medium text-slate-300 mb-1") {
+                label(
+                    classes =
+                        classNames(
+                            "block",
+                            "text-sm",
+                            "font-medium",
+                            "text-slate-300",
+                            "mb-1",
+                        ),
+                ) {
                     htmlFor = "email"
                     +"E-mail"
                 }
                 input(
                     type = InputType.email,
                     classes =
-                        "w-full rounded-lg border border-slate-800 bg-slate-950/60 px-4 py-2.5 text-sm text-slate-100 " +
-                            "placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/60",
+                        classNames(
+                            "w-full",
+                            "rounded-lg",
+                            "border",
+                            "border-slate-800",
+                            "bg-slate-950/60",
+                            "px-4",
+                            "py-2.5",
+                            "text-sm",
+                            "text-slate-100",
+                            "placeholder:text-slate-500",
+                            "focus:border-emerald-500",
+                            "focus:outline-none",
+                            "focus:ring-2",
+                            "focus:ring-emerald-500/60",
+                        ),
                 ) {
                     id = "email"
                     name = "email"
@@ -113,15 +182,38 @@ private fun FlowContent.loginCard(
             }
 
             div {
-                label(classes = "block text-sm font-medium text-slate-300 mb-1") {
+                label(
+                    classes =
+                        classNames(
+                            "block",
+                            "text-sm",
+                            "font-medium",
+                            "text-slate-300",
+                            "mb-1",
+                        ),
+                ) {
                     htmlFor = "password"
                     +"Senha"
                 }
                 input(
                     type = InputType.password,
                     classes =
-                        "w-full rounded-lg border border-slate-800 bg-slate-950/60 px-4 py-2.5 text-sm text-slate-100 " +
-                            "placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/60",
+                        classNames(
+                            "w-full",
+                            "rounded-lg",
+                            "border",
+                            "border-slate-800",
+                            "bg-slate-950/60",
+                            "px-4",
+                            "py-2.5",
+                            "text-sm",
+                            "text-slate-100",
+                            "placeholder:text-slate-500",
+                            "focus:border-emerald-500",
+                            "focus:outline-none",
+                            "focus:ring-2",
+                            "focus:ring-emerald-500/60",
+                        ),
                 ) {
                     id = "password"
                     name = "password"
@@ -133,16 +225,29 @@ private fun FlowContent.loginCard(
             button(
                 type = kotlinx.html.ButtonType.submit,
                 classes =
-                    "w-full rounded-lg bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-emerald-950 transition " +
-                        "hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/60",
+                    classNames(
+                        "w-full",
+                        "rounded-lg",
+                        "bg-emerald-500",
+                        "px-4",
+                        "py-2.5",
+                        "text-sm",
+                        "font-semibold",
+                        "text-emerald-950",
+                        "transition",
+                        "hover:bg-emerald-400",
+                        "focus:outline-none",
+                        "focus:ring-2",
+                        "focus:ring-emerald-400/60",
+                    ),
             ) {
                 +"Entrar"
             }
         }
 
-        p(classes = "mt-6 text-center text-xs text-slate-500") {
+        p(classes = classNames("mt-6", "text-center", "text-xs", "text-slate-500")) {
             +"Não tem uma conta ainda? "
-            span(classes = "text-emerald-400") { +"Registro em breve." }
+            span(classes = classNames("text-emerald-400")) { +"Registro em breve." }
         }
     }
 }

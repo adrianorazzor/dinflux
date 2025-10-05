@@ -13,6 +13,8 @@
 
 ## Agent Notes
 - Set a writable Gradle cache for linting/builds with `export GRADLE_USER_HOME=$PWD/.gradle` before invoking wrapper commands.
+- Respect the Kotlin style lint: keep every line at or below 140 characters.
+- When Tailwind (or similar) class lists get long, use the shared `classNames(...)` helper instead of inline string concatenation to stay within lint limits.
 
 ## Coding Style & Naming Conventions
 - Stick to Kotlin's four-space indentation, `val` by default, and concise expression bodies where they aid readability.

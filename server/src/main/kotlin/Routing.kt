@@ -2,6 +2,8 @@ package com
 
 import com.features.auth.AuthService
 import com.features.auth.authRoutes
+import com.features.auth.UserSession
+import com.features.dashboard.respondDashboard
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
@@ -11,6 +13,7 @@ import io.ktor.server.resources.Resources
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
+import io.ktor.server.sessions.get
 import org.koin.ktor.ext.inject
 
 fun Application.configureRouting() {
@@ -27,7 +30,8 @@ fun Application.configureRouting() {
     routing {
         authenticate("session") {
             get("/") {
-                call.respondText("Dashboard em construção")
+                val session = call.sessions.get<UserSession>()
+                call.respondDashboard(session)
             }
         }
     }
