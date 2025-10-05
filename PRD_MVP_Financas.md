@@ -108,3 +108,17 @@ O app deve permitir registrar **ingressos**, **despesas fixas e variáveis** e *
 - **Performance**: operações principais (<200ms).  
 - **Internacionalização**: labels e categorias seed em PT/ES.  
 - **Testabilidade**: testes unitários para regras de fatura e recorrência.  
+
+---
+
+## 5. Checklist de Desenvolvimento
+
+- [x] Implementar autenticação backend (rotas de registro/login, hashing de senha, armazenamento de sessão e middleware).
+- [ ] Construir página de login com HTMX/Tailwind e layout base integrado às rotas de autenticação.
+- [ ] Proteger rotas existentes com verificação de sessão e adicionar fluxo de logout.
+- [ ] Adicionar CRUD de contas (rotas, serviços, formulários, validações e testes conforme Sprint 1).
+- [ ] Adicionar CRUD de categorias (mesma abordagem, garantindo escopo por usuário e testes).
+- [ ] Adicionar CRUD de transações simples (income/expense/transfer) implementando regras de tipo e consultas Exposed.
+- [ ] Renderizar KPIs mensais do dashboard (ingressos, despesas cash, cartão, saldo) suportados por consultas testadas.
+- [ ] Escrever testes de integração/unidade para autenticação e CRUD; executar `./gradlew :server:test` e registrar resultados.
+- [ ] Documentar novos endpoints/fluxos e anotar necessidades de configuração/ambiente.

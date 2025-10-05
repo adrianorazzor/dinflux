@@ -8,3 +8,8 @@ postgres:
   url: "jdbc:postgresql://localhost:5432/dinflux"
   user: dinflux
   password: dinflux
+
+auth:
+  cookie:
+    name: dinflux_session
+  secret: ${AUTH_SESSION_SECRET:-super-secre-key}

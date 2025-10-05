@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.ktor.server.netty)
     implementation(libs.logback.classic)
     implementation(libs.ktor.server.config.yaml)
+    implementation(libs.jbcrypt)
     flywayMigration(libs.postgresql)
     flywayMigration(libs.flyway.database.postgresql)
     testImplementation(libs.ktor.server.test.host)

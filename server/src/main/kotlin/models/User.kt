@@ -18,6 +18,7 @@ object Users : UUIDTable() {
     val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
 }
 
+@Suppress("unused")
 class User(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<User>(Users)
 
