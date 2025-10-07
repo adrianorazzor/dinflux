@@ -11,12 +11,15 @@ class AuthService(
         displayName: String,
         password: String,
     ): Result<UserSession> {
-        if (userRepository.findByEmail(email) != null) {
+        val normalizedEmail = email.trim()
+        val normalizedDisplayName = displayName.trim()
+
+        if (userRepository.findByEmail(normalizedEmail) != null) {
             return Result.failure(IllegalStateException("email_in_use"))
         }
 
         val hash = passwordHasher.hash(password)
-        val user = userRepository.create(email, displayName, hash)
+        val user = userRepository.create(normalizedEmail, normalizedDisplayName, hash)
         return Result.success(UserSession(user.id.value.toString(), user.email))
     }
 
@@ -24,8 +27,10 @@ class AuthService(
         email: String,
         password: String,
     ): Result<UserSession> {
+        val normalizedEmail = email.trim()
+
         val user =
-            userRepository.findByEmail(email)
+            userRepository.findByEmail(normalizedEmail)
                 ?: return Result.failure(IllegalArgumentException("invalid_credentials"))
         if (!user.isActive) return Result.failure(IllegalStateException("inactive_user"))
         if (!passwordHasher.verify(password, user.password)) {
