@@ -1,16 +1,16 @@
 package com.features.auth
 
 import com.features.shared.isHtmxRequest
-import io.ktor.http.HttpStatusCode
+import com.features.shared.respondWithRedirect
 import io.ktor.server.application.Application
+import io.ktor.server.application.application
+import io.ktor.server.application.call
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.request.receiveParameters
 import io.ktor.server.resources.get
 import io.ktor.server.resources.href
 import io.ktor.server.resources.post
-import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
-import io.ktor.server.response.respondText
 import io.ktor.server.routing.routing
 import io.ktor.server.sessions.clear
 import io.ktor.server.sessions.get
@@ -30,22 +30,56 @@ fun Application.authRoutes(authService: AuthService) {
             call.respondLoginPage(error, email)
         }
 
+        get<AuthResources.Register> {
+            if (call.sessions.get<UserSession>() != null) {
+                call.respondRedirect("/")
+                return@get
+            }
+
+            val form = RegisterFormState()
+            if (call.isHtmxRequest()) {
+                call.respondRegisterCard(form)
+            } else {
+                call.respondRegisterPage(form)
+            }
+        }
+
         post<AuthResources.Register> {
             val params = call.receiveParameters()
-            val email = params["email"].orEmpty()
-            val displayName = params["displayName"].orEmpty()
+            val email = params["email"].orEmpty().trim()
+            val displayName = params["displayName"].orEmpty().trim()
             val password = params["password"].orEmpty()
+            val confirmPassword = params["confirmPassword"].orEmpty()
+            val isHtmx = call.isHtmxRequest()
+
+            val formState =
+                RegisterFormState(
+                    displayName = displayName,
+                    email = email,
+                    password = "",
+                    confirmPassword = "",
+                )
+
+            val validationError = validateRegisterForm(displayName, email, password, confirmPassword)
+            if (validationError != null) {
+                call.respondRegister(formState.copy(errorMessage = validationError), isHtmx)
+                return@post
+            }
 
             authService.register(email, displayName, password)
                 .onSuccess {
                     call.sessions.set(it)
-                    call.respondWithRedirect("/", isHtmx = call.isHtmxRequest())
+                    call.respondWithRedirect("/", isHtmx)
                 }
                 .onFailure {
-                    call.respondText(it.message ?: "registration_failed", status = HttpStatusCode.BadRequest)
+                    val message =
+                        when (it.message) {
+                            "email_in_use" -> "E-mail já cadastrado."
+                            else -> it.message ?: "Não foi possível concluir o cadastro."
+                        }
+                    call.respondRegister(formState.copy(errorMessage = message), isHtmx)
                 }
         }
-
         post<AuthResources.Login> {
             val params = call.receiveParameters()
             val email = params["email"].orEmpty().trim()
@@ -84,14 +118,23 @@ private fun Throwable.toLoginErrorMessage(): String =
         else -> "Não foi possível entrar. Tente novamente."
     }
 
-private suspend fun ApplicationCall.respondWithRedirect(
-    target: String,
-    isHtmx: Boolean,
-) {
+private suspend fun ApplicationCall.respondRegister(form: RegisterFormState, isHtmx: Boolean) {
     if (isHtmx) {
-        response.headers.append("HX-Redirect", target)
-        respond(HttpStatusCode.NoContent)
+        respondRegisterCard(form)
     } else {
-        respondRedirect(target)
+        respondRegisterPage(form)
     }
+}
+
+private fun validateRegisterForm(
+    displayName: String,
+    email: String,
+    password: String,
+    confirmPassword: String,
+): String? {
+    if (displayName.isBlank()) return "Informe seu nome."
+    if (email.isBlank() || !email.contains('@')) return "Informe um e-mail válido."
+    if (password.length < 8) return "Use uma senha com pelo menos 8 caracteres."
+    if (password != confirmPassword) return "As senhas não coincidem."
+    return null
 }

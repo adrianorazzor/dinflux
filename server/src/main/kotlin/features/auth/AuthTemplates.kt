@@ -11,6 +11,7 @@ import kotlinx.html.FormEncType
 import kotlinx.html.FormMethod
 import kotlinx.html.HTML
 import kotlinx.html.InputType
+import kotlinx.html.a
 import kotlinx.html.body
 import kotlinx.html.button
 import kotlinx.html.classes
@@ -112,23 +113,7 @@ private fun FlowContent.loginCard(
             +"Entre na sua conta"
         }
 
-        if (!error.isNullOrBlank()) {
-            div(
-                classes =
-                    classNames(
-                        "mb-4",
-                        "rounded-lg",
-                        "border",
-                        "border-red-500/40",
-                        "bg-red-500/10",
-                        "p-4",
-                        "text-sm",
-                        "text-red-200",
-                    ),
-            ) {
-                span { +error }
-            }
-        }
+        errorNotice(error)
 
         form {
             method = FormMethod.post
@@ -137,6 +122,7 @@ private fun FlowContent.loginCard(
             attributes["hx-post"] = "/auth/login"
             attributes["hx-target"] = "#login-card"
             attributes["hx-swap"] = "outerHTML"
+            attributes["novalidate"] = "novalidate"
             classes = setOf("space-y-5")
 
             div {
@@ -247,7 +233,237 @@ private fun FlowContent.loginCard(
 
         p(classes = classNames("mt-6", "text-center", "text-xs", "text-slate-500")) {
             +"Não tem uma conta ainda? "
-            span(classes = classNames("text-emerald-400")) { +"Registro em breve." }
+            a(classes = classNames("text-emerald-400", "hover:text-emerald-300"), href = "/auth/register") {
+                +"Crie uma agora."
+            }
         }
     }
 }
+
+suspend fun ApplicationCall.respondRegisterPage(form: RegisterFormState) {
+    respondHtml { registerPage(form) }
+}
+
+suspend fun ApplicationCall.respondRegisterCard(
+    form: RegisterFormState,
+    status: HttpStatusCode = HttpStatusCode.OK,
+) {
+    val snippet = createHTML().div { registerCard(form) }
+    respondText(snippet, ContentType.Text.Html, status)
+}
+
+private fun HTML.registerPage(form: RegisterFormState) {
+    lang = "pt-BR"
+    head {
+        meta { charset = "utf-8" }
+        meta {
+            name = "viewport"
+            content = "width=device-width, initial-scale=1"
+        }
+        title { +"Dinflux · Criar conta" }
+        script(src = "https://cdn.tailwindcss.com") {}
+        script(src = "https://unpkg.com/htmx.org@1.9.12") {}
+    }
+    body(
+        classes =
+            classNames(
+                "min-h-screen",
+                "bg-slate-950",
+                "text-slate-100",
+                "flex",
+                "items-center",
+                "justify-center",
+                "p-6",
+            ),
+    ) {
+        div { registerCard(form) }
+    }
+}
+
+private fun FlowContent.registerCard(form: RegisterFormState) {
+    div(
+        classes =
+            classNames(
+                "w-full",
+                "max-w-md",
+                "rounded-2xl",
+                "bg-slate-900/80",
+                "backdrop-blur",
+                "shadow-xl",
+                "ring-1",
+                "ring-slate-800",
+                "p-8",
+            ),
+    ) {
+        id = "register-card"
+        h1(
+            classes =
+                classNames(
+                    "text-2xl",
+                    "font-semibold",
+                    "text-slate-50",
+                    "mb-6",
+                    "text-center",
+                ),
+        ) {
+            +"Crie sua conta"
+        }
+
+        errorNotice(form.errorMessage)
+
+        form {
+            method = FormMethod.post
+            encType = FormEncType.applicationXWwwFormUrlEncoded
+            action = "/auth/register"
+            attributes["hx-post"] = "/auth/register"
+            attributes["hx-target"] = "#register-card"
+            attributes["hx-swap"] = "outerHTML"
+            attributes["novalidate"] = "novalidate"
+            classes = setOf("space-y-5")
+
+            labeledInput(
+                name = "displayName",
+                label = "Nome",
+                type = InputType.text,
+                value = form.displayName,
+                autocomplete = "name",
+            )
+
+            labeledInput(
+                name = "email",
+                label = "E-mail",
+                type = InputType.email,
+                value = form.email,
+                autocomplete = "email",
+            )
+
+            labeledInput(
+                name = "password",
+                label = "Senha",
+                type = InputType.password,
+                value = form.password,
+                autocomplete = "new-password",
+            )
+
+            labeledInput(
+                name = "confirmPassword",
+                label = "Confirme a senha",
+                type = InputType.password,
+                value = form.confirmPassword,
+                autocomplete = "new-password",
+            )
+
+            button(
+                type = kotlinx.html.ButtonType.submit,
+                classes =
+                    classNames(
+                        "w-full",
+                        "rounded-lg",
+                        "bg-emerald-500",
+                        "px-4",
+                        "py-2.5",
+                        "text-sm",
+                        "font-semibold",
+                        "text-emerald-950",
+                        "transition",
+                        "hover:bg-emerald-400",
+                        "focus:outline-none",
+                        "focus:ring-2",
+                        "focus:ring-emerald-400/60",
+                    ),
+            ) {
+                +"Registrar"
+            }
+        }
+
+        p(classes = classNames("mt-6", "text-center", "text-xs", "text-slate-500")) {
+            +"Já tem uma conta? "
+            a(classes = classNames("text-emerald-400", "hover:text-emerald-300"), href = "/auth/login") {
+                +"Entre aqui."
+            }
+        }
+    }
+}
+
+private fun FlowContent.labeledInput(
+    name: String,
+    label: String,
+    type: InputType,
+    value: String,
+    autocomplete: String,
+) {
+    div(classes = classNames("flex", "flex-col", "gap-2")) {
+        label(
+            classes =
+                classNames(
+                    "block",
+                    "text-sm",
+                    "font-medium",
+                    "text-slate-300",
+                    "mb-1",
+                ),
+        ) {
+            htmlFor = name
+            +label
+        }
+        input(type = type) {
+            id = name
+            this.name = name
+            this.value = value
+            attributes["autocomplete"] = autocomplete
+            required = true
+            classes =
+                setOf(
+                    classNames(
+                        "w-full",
+                        "rounded-lg",
+                        "border",
+                        "border-slate-800",
+                        "bg-slate-950/60",
+                        "px-4",
+                        "py-2.5",
+                        "text-sm",
+                        "text-slate-100",
+                        "placeholder:text-slate-500",
+                        "focus:border-emerald-500",
+                        "focus:outline-none",
+                        "focus:ring-2",
+                        "focus:ring-emerald-500/60",
+                    )
+                )
+        }
+    }
+}
+
+private fun FlowContent.errorNotice(message: String?) {
+    val content = message?.trim()?.takeIf { it.isNotEmpty() } ?: return
+    div(
+        classes =
+            classNames(
+                "mb-4",
+                "flex",
+                "items-start",
+                "rounded-lg",
+                "border",
+                "border-red-500/40",
+                "bg-red-500/10",
+                "max-h-[72px]",
+                "overflow-y-auto",
+                "p-4",
+                "text-sm",
+                "leading-snug",
+                "text-red-200",
+            ),
+    ) {
+        attributes["role"] = "alert"
+        span { +content }
+    }
+}
+
+data class RegisterFormState(
+    val displayName: String = "",
+    val email: String = "",
+    val password: String = "",
+    val confirmPassword: String = "",
+    val errorMessage: String? = null,
+)
